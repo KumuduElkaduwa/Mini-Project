@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login
-from .forms import RegisterForm
+from django.contrib.auth import login, authenticate, logout
+from .forms import RegisterForm, LoginForm
 
+# Register view
 def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -13,12 +14,7 @@ def register(request):
         form = RegisterForm()
     return render(request, 'accounts/register.html', {'form': form})
 
-
-
-from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect
-from .forms import LoginForm
-
+# Login view
 def user_login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -28,11 +24,39 @@ def user_login(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('home')  # Redirect to the home page after successful login
+                return redirect('home')
             else:
-                # Add a non-field error if authentication fails
                 form.add_error(None, "Invalid username or password.")
     else:
         form = LoginForm()
 
     return render(request, 'accounts/login.html', {'form': form})
+
+# Logout view
+def user_logout(request):
+    logout(request)
+    return redirect('login')
+
+# Home view
+def home(request):
+    return render(request, 'home.html')
+
+# Profile view
+def profile(request):
+    return render(request, 'accounts/profile.html')
+
+# Groups view
+def groups(request):
+    return render(request, 'accounts/groups.html')
+
+# Upload video view
+def upload_video(request):
+    return render(request, 'accounts/upload_video.html')
+
+# Create group view
+def create_group(request):
+    return render(request, 'accounts/create_group.html')
+
+# Chat view
+def chat(request):
+    return render(request, 'accounts/chat.html')
